@@ -50,9 +50,12 @@
 __pycache__/
 *.pyc
 
-# ---------- .NET (future server/, shared/) ----------
-bin/
-obj/
+# ---------- Backend (backend/, Spring Boot + Gradle) ----------
+# Build outputs and IDE files are ignored by backend/.gitignore.
+# Local H2 database files.
+/backend/data/
+*.mv.db
+*.trace.db
 
 # ---------- Secrets — never commit ----------
 *.keystore

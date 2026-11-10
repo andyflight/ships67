@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-auth-identity
+      author: shipmaster
+      changes:
+        - createTable:
+            tableName: auth_identity
+            columns:
+              - column: { name: id, type: uuid, constraints: { primaryKey: true, primaryKeyName: pk_auth_identity, nullable: false } }
+              - column:
+                  name: player_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_auth_identity_player
+                    references: player(id)
+                    deleteCascade: true
+              - column: { name: provider, type: varchar(32), constraints: { nullable: false } }
+              - column: { name: subject, type: varchar(255), constraints: { nullable: false } }
+              # GUEST identities only: SHA-256 hex of the guest credential.
+              - column: { name: credential_hash, type: varchar(64), constraints: { nullable: true, unique: true, uniqueConstraintName: uq_auth_identity_credential_hash } }
+              - column: { name: created_at, type: timestamp with time zone, constraints: { nullable: false } }
+              - column: { name: last_used_at, type: timestamp with time zone }
+        - addUniqueConstraint:
+            tableName: auth_identity
+            columnNames: provider, subject
+            constraintName: uq_auth_identity_provider_subject
+        - createIndex:
+            tableName: auth_identity
+            indexName: ix_auth_identity_player_id
+            columns:
+              - column: { name: player_id }

@@ -2,12 +2,14 @@
 
 Мобільна 3D-гра (Android + iOS): гравець має корабель, ставить на нього апгрейди (деталі),
 потім еволюціонує його до наступного тиру або купує новий; корабель можна перефарбувати.
+Акаунти гравців і прогрес зберігає власний сервер.
 
 ## Структура
 
 ```
 shipmaster/
 ├── client/     Unity-проєкт (Unity 6000.3.27f2, URP) — див. client/README.md
+├── backend/    сервер гри (Spring Boot 4.1, Java 25, H2 → PostgreSQL) — див. backend/README.md
 ├── assets/     вихідники з Blender (.blend, текстури-джерела, референси)
 ├── openspec/   спільні специфікації та зміни (OpenSpec)
 └── .claude/    команди /opsx:* та скіли OpenSpec для Claude Code
@@ -15,7 +17,7 @@ shipmaster/
 
 | Хто | Працює в | Що робить |
 |---|---|---|
-| Unity-розробник | `client/`, `openspec/` | пропозиції змін, імпорт, префаби, код гри, перевірка арту |
+| Unity-розробник | `client/`, `backend/`, `openspec/` | пропозиції змін, імпорт, префаби, код гри й сервера, перевірка арту |
 | Blender-художник | `assets/` | моделі й текстури через Claude + Blender MCP; експорт FBX/PNG у `client/Assets/_Project/Art/` (більше нічого в `client/` не змінює) |
 
 ## Підготовка (один раз)
@@ -32,7 +34,8 @@ shipmaster/
    openspec --version
    ```
 4. **Claude Code** — запускати **з кореня репозиторію** (`shipmaster/`), тоді підхоплюються команди `/opsx:*`.
-5. Художнику — Blender + підключений до Claude Blender MCP. Unity-розробнику — Unity 6000.3.27f2 і `unity` CLI.
+5. Художнику — Blender + підключений до Claude Blender MCP. Unity-розробнику — Unity 6000.3.27f2, `unity` CLI
+   і JDK 17+ для Gradle (Java 25 для бекенду Gradle завантажить сам).
 
 ## Як створюється ассет
 
@@ -51,6 +54,18 @@ shipmaster/
 4. **Unity-розробник:** `/opsx:archive <change>` — контракт ассета переходить у `openspec/specs/`.
 
 Імпортовані FBX/PNG вручну не правимо — виправляємо в Blender і експортуємо заново.
+
+## Як змінюється бекенд
+
+Сервер — джерело правди: клієнт надсилає дії (встановити деталь, еволюціонувати, купити), сервер перевіряє й застосовує.
+Правила — `backend/CLAUDE.md`.
+
+1. `/opsx:propose <change>` — у `design.md` перелік ендпоінтів (`/api/v1/...`), Liquibase-змін і що міняється в Unity-клієнті;
+   задачі позначені `[backend]` / `[unity]`.
+2. `/opsx:apply <change>` → код + тести → `cd backend && ./gradlew test`.
+3. `/opsx:archive <change>` — контракт API переходить у `openspec/specs/`.
+
+Локальний запуск: `cd backend && ./gradlew bootRun` → `http://localhost:8080`.
 
 ## Git
 

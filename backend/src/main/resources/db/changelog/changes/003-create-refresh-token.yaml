@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-refresh-token
+      author: shipmaster
+      changes:
+        - createTable:
+            tableName: refresh_token
+            columns:
+              - column: { name: id, type: uuid, constraints: { primaryKey: true, primaryKeyName: pk_refresh_token, nullable: false } }
+              - column:
+                  name: player_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_refresh_token_player
+                    references: player(id)
+                    deleteCascade: true
+              - column: { name: family_id, type: uuid, constraints: { nullable: false } }
+              # SHA-256 hex of the token; the token itself is never stored.
+              - column: { name: token_hash, type: varchar(64), constraints: { nullable: false, unique: true, uniqueConstraintName: uq_refresh_token_hash } }
+              - column: { name: replaced_by, type: uuid }
+              - column: { name: created_at, type: timestamp with time zone, constraints: { nullable: false } }
+              - column: { name: expires_at, type: timestamp with time zone, constraints: { nullable: false } }
+              - column: { name: used_at, type: timestamp with time zone }
+              - column: { name: revoked_at, type: timestamp with time zone }
+        - createIndex:
+            tableName: refresh_token
+            indexName: ix_refresh_token_family_id
+            columns:
+              - column: { name: family_id }
+        - createIndex:
+            tableName: refresh_token
+            indexName: ix_refresh_token_player_id
+            columns:
+              - column: { name: player_id }
