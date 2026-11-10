@@ -1,0 +1,39 @@
+# Unity (client/)
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+*.csproj
+*.sln
+*.slnx
+*.pidb
+*.userprefs
+*.apk
+*.aab
+*.unitypackage
+client/Assets/StreamingAssets/aa*
+client/Assets/AddressableAssetsData/*/*.bin*
+
+# .NET (server/, shared/)
+bin/
+obj/
+
+# Secrets — never commit
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+.env
+
+# OS / IDE
+.DS_Store
+.idea/
+
+# Test reports
+test-results*.xml

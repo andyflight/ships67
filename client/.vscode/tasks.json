@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Unity: Play Bootstrap",
+            "detail": "Opens the editor if needed, opens Bootstrap.unity and enters Play Mode",
+            "type": "shell",
+            "command": "unity open . --until-ready && unity command scene open --path Assets/_Project/Scenes/Bootstrap.unity && unity command editor.playmode start",
+            "group": { "kind": "build", "isDefault": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: Stop",
+            "type": "shell",
+            "command": "unity command editor.playmode stop",
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: Recompile",
+            "detail": "Recompiles scripts in the running editor and reports compile errors",
+            "type": "shell",
+            "command": "unity recompile",
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: EditMode tests",
+            "type": "shell",
+            "command": "unity test . --mode EditMode",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: Console",
+            "detail": "Streams the running editor's console into the terminal",
+            "type": "shell",
+            "command": "unity logs --console --follow",
+            "isBackground": true,
+            "problemMatcher": []
+        }
+    ]
+}
