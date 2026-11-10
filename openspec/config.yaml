@@ -1,27 +1,43 @@
 schema: spec-driven
 
 context: |
-  Shipmaster: mobile 3D game (Android + iOS). Unity 6.3 LTS + URP.
+  Shipmaster: mobile 3D game (Android + iOS). Unity 6.3 LTS + URP client, Spring Boot backend.
   Core loop: the player owns a ship, installs upgrade parts on it, then evolves it to the next tier
   or buys a new ship. Ships can be repainted. Content: ships, ship parts, paints; more types later.
 
   Repo layout and owners:
-  - assets/  Blender source files (.blend, source textures, references). Owner: Blender artist,
-             who works through Claude + Blender MCP.
-  - client/  Unity project. Owner: Unity developer. The artist only writes exported FBX/PNG files
-             into client/Assets/_Project/Art/ and changes nothing else in client/.
+  - assets/   Blender source files (.blend, source textures, references). Owner: Blender artist,
+              who works through Claude + Blender MCP.
+  - client/   Unity project. Owner: Unity developer. The artist only writes exported FBX/PNG files
+              into client/Assets/_Project/Art/ and changes nothing else in client/.
+  - backend/  Game server. Owner: Unity developer. Rules: backend/CLAUDE.md.
   - openspec/ Shared specs. Run Claude Code and the openspec CLI from the repo root.
 
-  Art rules: openspec/specs/art-pipeline and openspec/specs/art-ship-modularity.
-  Art budgets (triangles, texture sizes, size ranges): client/Assets/_Project/Scripts/Editor/ArtBudgets.json.
-  Unity art check, run from client/: unity test . --mode EditMode --filter Shipmaster.Tests.ArtAssetsTests
+  Art (assets/ -> client/):
+  - Rules: openspec/specs/art-pipeline and openspec/specs/art-ship-modularity.
+  - Budgets (triangles, texture sizes, size ranges): client/Assets/_Project/Scripts/Editor/ArtBudgets.json.
+  - Unity art check, run from client/: unity test . --mode EditMode --filter Shipmaster.Tests.ArtAssetsTests
+
+  Backend (backend/):
+  - Spring Boot 4.1, Java 25, Gradle, Spring MVC, Spring Data JPA, Liquibase, Lombok.
+  - Database: H2 (file, PostgreSQL mode) now, PostgreSQL later by configuration only.
+  - Owns player accounts, authentication and progress (owned ships, installed parts, paints, currencies).
+    Knows content ids (ship_*, part_*, paint_*) and gameplay numbers, never art files.
+  - Server-authoritative: the client sends actions, the server validates and applies them.
+  - REST + JSON under /api/v1, errors as RFC 9457 problem+json, schema changes only via Liquibase.
+  - Check, run from backend/: ./gradlew test
 
 rules:
   specs:
-    - Per-asset contracts go into catalog capabilities art-ships, art-parts, art-props, art-environment, one requirement per asset id
-    - Do not restate rules from art-pipeline or art-ship-modularity; add only what is specific to the asset
+    - "Art: per-asset contracts go into catalog capabilities art-ships, art-parts, art-props, art-environment, one requirement per asset id"
+    - "Art: do not restate rules from art-pipeline or art-ship-modularity; add only what is specific to the asset"
+    - "Backend: name capabilities by game domain (player-account, player-auth, player-progress, economy, ...), not by layer"
+    - "Backend: scenarios describing the API name the method, path and HTTP status (e.g. POST /api/v1/ships/{id}/evolve -> 409)"
+  design:
+    - "Backend: list every endpoint (method, path, request and response JSON), every Liquibase changeset and the Unity client impact"
   tasks:
-    - Prefix every task with its owner, [blender] or [unity]
+    - Prefix every task with its owner, [blender], [unity] or [backend]
+    - "[backend] tasks include their tests; a change is done when ./gradlew test passes"
 
 operations:
   apply:

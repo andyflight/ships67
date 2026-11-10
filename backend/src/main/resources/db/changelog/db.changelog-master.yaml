@@ -1,0 +1,10 @@
+# Liquibase master changelog: the only way the database schema changes.
+# Add one file per change in changes/, named <NNN>-<short-name>.yaml (e.g. 001-create-players.yaml),
+# and include it below in order. Never edit a changeset that is already merged; add a new one.
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/001-create-player.yaml
+  - include:
+      file: db/changelog/changes/002-create-auth-identity.yaml
+  - include:
+      file: db/changelog/changes/003-create-refresh-token.yaml
