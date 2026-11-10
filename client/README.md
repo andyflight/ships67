@@ -14,20 +14,25 @@ Unity-клієнт мобільної 3D-гри Shipmaster (Android, iOS).
 
 ## Арт із Blender
 
-### Експорт
+Правила для арту (назви, осі, origin, LOD, колайдери, сокети, текстури, фарби) — у специфікаціях OpenSpec:
 
-- Формат **FBX**, одиниці — метри (Scene Scale 1.0), застосувати трансформації (`Ctrl+A → All Transforms`).
-- Точка origin — внизу по центру моделі (для корабля — на ватерлінії по центру).
-- Ніс корабля дивиться в **-Y** у Blender (вид спереду, Numpad 1, показує ніс).
-- Назви: `snake_case`, без пробілів, напр. `ship_frigate.fbx`.
-- Текстури — PNG, розмір степенем двійки (512, 1024, 2048).
+- `../openspec/specs/art-pipeline/spec.md` — загальні правила для всіх ассетів;
+- `../openspec/specs/art-ship-modularity/spec.md` — кораблі за тирами, слоти для апгрейдів, деталі, фарби;
+- `Assets/_Project/Scripts/Editor/ArtBudgets.json` — числа (трикутники, розміри, текстури) по категоріях.
 
-### Імпорт
+Коротко: FBX → `Assets/_Project/Art/Models/<Ships|Parts|Props|Environment>/<asset_id>.fbx`,
+текстури → `Assets/_Project/Art/Textures/<asset_id>/<asset_id>_<BaseMap|Normal|MaskMap|PaintMask|Emission>.png`.
+Налаштування імпорту застосовуються автоматично, помилки пишуться в консоль при імпорті.
 
-1. Покласти FBX у `Assets/_Project/Art/Models/` (текстури — в `Art/Textures/`).
-   Налаштування імпорту (масштаб, осі Blender → Unity) застосовуються автоматично.
-2. Створити префаб `Assets/_Project/Resources/Views/<Ключ>.prefab` (напр. `Ship.prefab`):
-   порожній об'єкт → FBX дочірнім; тут же підкрутити поворот/масштаб, якщо треба.
-3. Play — замість заглушки буде модель. Код змінювати не потрібно.
+### Перевірка
 
+```bash
+unity test . --mode EditMode --filter Shipmaster.Tests.ArtAssetsTests   # гейт: кожен ассет має пройти
+```
+
+Або в редакторі: **Shipmaster → Art → Validate All**.
+
+### Підключення до гри
+
+Префаб `Assets/_Project/Resources/Views/<Ключ>.prefab` (порожній об'єкт → FBX дочірнім) перекриває заглушку.
 Ключі вью: `Assets/_Project/Scripts/Runtime/Views/IViewFactory.cs` → `ViewKeys`.

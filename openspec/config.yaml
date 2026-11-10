@@ -1,32 +1,29 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+context: |
+  Shipmaster: mobile 3D game (Android + iOS). Unity 6.3 LTS + URP.
+  Core loop: the player owns a ship, installs upgrade parts on it, then evolves it to the next tier
+  or buys a new ship. Ships can be repainted. Content: ships, ship parts, paints; more types later.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Repo layout and owners:
+  - assets/  Blender source files (.blend, source textures, references). Owner: Blender artist,
+             who works through Claude + Blender MCP.
+  - client/  Unity project. Owner: Unity developer. The artist only writes exported FBX/PNG files
+             into client/Assets/_Project/Art/ and changes nothing else in client/.
+  - openspec/ Shared specs. Run Claude Code and the openspec CLI from the repo root.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Art rules: openspec/specs/art-pipeline and openspec/specs/art-ship-modularity.
+  Art budgets (triangles, texture sizes, size ranges): client/Assets/_Project/Scripts/Editor/ArtBudgets.json.
+  Unity art check, run from client/: unity test . --mode EditMode --filter Shipmaster.Tests.ArtAssetsTests
+
+rules:
+  specs:
+    - Per-asset contracts go into catalog capabilities art-ships, art-parts, art-props, art-environment, one requirement per asset id
+    - Do not restate rules from art-pipeline or art-ship-modularity; add only what is specific to the asset
+  tasks:
+    - Prefix every task with its owner, [blender] or [unity]
+
+operations:
+  apply:
+    guidance:
+      - Do only the tasks tagged with your role; leave the other role's tasks unchecked

@@ -31,7 +31,9 @@ Assets/
 4. **Без сторонніх DI/async-бібліотек**, поки не знадобляться: async — `Awaitable` (Unity 6).
 5. **Сцени не редагуємо вручну.** Об'єкти створюються в коді; налаштування імпорту — через `AssetPostprocessor` у `Scripts/Editor`.
 6. Нова runtime-логіка без залежності від сцени → EditMode-тест у `Tests/EditMode`.
-7. Ніколи не комітити ключі підпису, `.p8`, `.env` (вже в `.gitignore`).
+7. **Арт перевіряється кодом.** Правила — `../openspec/specs/art-*`, числа — `Scripts/Editor/ArtBudgets.json`; міняти лише разом.
+   Гейт: `unity test . --mode EditMode --filter Shipmaster.Tests.ArtAssetsTests`. Імпортовані FBX/PNG не правимо — виправляємо в Blender.
+8. Ніколи не комітити ключі підпису, `.p8`, `.env` (вже в `.gitignore`).
 
 ## Команди (Unity CLI, запускати з `client/`)
 

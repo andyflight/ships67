@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "textureSuffixes": ["BaseMap", "Normal", "MaskMap", "PaintMask", "Emission"],
+  "linearTextureSuffixes": ["Normal", "MaskMap", "PaintMask"],
+  "materialPrefix": "M_",
+  "colliderPrefix": "COL_",
+  "socketPrefix": "socket_",
+  "categories": [
+    {
+      "prefix": "ship",
+      "idPattern": "^ship_[a-z0-9]+_t[1-9][0-9]*$",
+      "unityFolder": "Ships",
+      "lodTriangles": [15000, 6000, 2000],
+      "maxMaterials": 3,
+      "maxTextureSize": 2048,
+      "minSizeMeters": 3,
+      "maxSizeMeters": 80,
+      "origin": "waterline",
+      "requiredSockets": ["socket_bow"]
+    },
+    {
+      "prefix": "part",
+      "idPattern": "^part_[a-z0-9]+_[a-z0-9]+(_[a-z0-9]+)*$",
+      "unityFolder": "Parts",
+      "lodTriangles": [3000, 1200],
+      "maxMaterials": 2,
+      "maxTextureSize": 1024,
+      "minSizeMeters": 0.2,
+      "maxSizeMeters": 20,
+      "origin": "mount",
+      "requiredSockets": []
+    },
+    {
+      "prefix": "prop",
+      "idPattern": "^prop_[a-z0-9]+(_[a-z0-9]+)*$",
+      "unityFolder": "Props",
+      "lodTriangles": [3000],
+      "maxMaterials": 2,
+      "maxTextureSize": 1024,
+      "minSizeMeters": 0.1,
+      "maxSizeMeters": 10,
+      "origin": "bottom",
+      "requiredSockets": []
+    },
+    {
+      "prefix": "env",
+      "idPattern": "^env_[a-z0-9]+(_[a-z0-9]+)*$",
+      "unityFolder": "Environment",
+      "lodTriangles": [20000, 8000],
+      "maxMaterials": 4,
+      "maxTextureSize": 2048,
+      "minSizeMeters": 1,
+      "maxSizeMeters": 500,
+      "origin": "bottom",
+      "requiredSockets": []
+    }
+  ]
+}
